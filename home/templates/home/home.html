@@ -14,6 +14,8 @@
 
 <div class="home-container">
 
+
+
     <div class="left">
         <h3 class="left-title"> Browse Topics </h3>
         <ul>
@@ -38,8 +40,10 @@
 
 
         {% for room in room %}
+        {% if request.user == room.host %}
             <a href="update_room/{{room.id}}">Edit </a> <br>
             <a href="delete_room/{{room.id}}">Delete </a> <br>
+        {% endif %}
             <span>@{{room.host.username}}
         <div> {{room.id}}  ---  <a href="/room/{{room.id}}">{{room.name}}</a></div>
         <small> {{room.topic.name}}</small>

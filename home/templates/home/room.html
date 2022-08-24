@@ -3,8 +3,141 @@
 
 {% block content %}
 
-<h1>room</h1>
+<style>
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      }
+      
+      /* Modal Content/Box */
+      .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+      }
+      
+      /* The Close Button */
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
 
-{{room.name}}
+
+      .room_container
+      {
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        width:92vw;
+      }
+      .room_participants
+      {
+        border:2px solid black;
+        height:100%;
+        width:50vw;
+        margin:3%;
+        padding:20px;
+      }
+      .room_messages
+      {
+        border:2px solid black;
+        height:100%;
+        width:40vw;
+        margin:3%;
+        padding:15px;
+      }
+</style>
+
+<p><h1>{{room.name}}</h1></p>
+<p><h5>{{room.desc}}</h5></p>
+<hr>
+<div class="room_container">
+    <div class="room_messages">
+        <h2> Conversations:</h2>
+        {% for message in messages  %}
+        <div>
+            <hr> 
+            <p><strong> @ {{message.user}} </strong></p>
+            <p> {{message.body}} </p>
+            <p> <h6> {{message.created|timesince}} ago </h6></p>
+            <hr>
+        </div>
+        {% endfor %}
+        <div class="addcomment">
+            {% if request.user.is_authenticated %}
+            <button id="myBtn"> + Add a new comment </button>
+            {% endif %}
+            <div id="myModal" class="modal">
+        
+                
+                <div class="modal-content">
+                  <span class="close">&times;</span>
+                    <form method='post' action="">
+                        {% csrf_token %}
+                       
+                        <textarea id="message" name="message" rows="4" cols="50"></textarea>
+                       
+                        <br>
+                        <input type="submit" value="POST">
+                
+                    </form>
+                </div>
+              
+            </div>
+        </div>
+    </div>
+    <div class="room_participants">
+            <h2> Participants: </h2>
+    </div>
+
+</div>
+
+<script>
+    var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+  modal.resest();
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+  modal.resest();
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+    modal.resest();
+  }
+}
+</script>
 
 {% endblock content %}
